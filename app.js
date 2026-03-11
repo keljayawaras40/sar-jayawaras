@@ -459,7 +459,125 @@ function exportPDF() {
   }
 }
 
-// importJSON removed per request
+// --- Backup & Import Functions ---
+
+function exportBackup() {
+  try {
+    const state = loadState();
+
+    // Add metadata to backup
+    const backup = {
+      version: "1.0",
+      exported_at: nowISO(),
+      total_letters: (state.letters || []).length,
+      counters: state.counters || {},
+      letters: state.letters || [],
+    };
+
+    // Create download
+    const json = JSON.stringify(backup, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    // Create filename with timestamp
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+    a.href = url;
+    a.download = `backup_register_${timestamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert(`✅ Backup berhasil diunduh!\n\nFile: ${a.download}\nTotal data: ${backup.total_letters} register`);
+  } catch (error) {
+    console.error("Backup gagal:", error);
+    alert(`❌ Gagal membuat backup: ${error.message}`);
+  }
+}
+
+function importBackup() {
+  const fileInput = document.getElementById("fileImport");
+  fileInput.click();
+}
+
+// Handle file selection for import
+document.addEventListener("DOMContentLoaded", () => {
+  const fileInput = document.getElementById("fileImport");
+  if (fileInput) {
+    fileInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const backup = JSON.parse(text);
+
+        // Validate backup structure
+        if (!backup.letters || !Array.isArray(backup.letters)) {
+          throw new Error("Format file backup tidak valid. Mohon pastikan file backup yang benar.");
+        }
+
+        // Show confirmation dialog
+        const totalLetters = backup.letters.length;
+        const currentLetters = loadState().letters.length;
+
+        dlgTitle.textContent = "Konfirmasi Import Backup";
+        dlgBody.innerHTML = `
+          <div style="line-height: 1.6; font-size: 14px;">
+            <p><strong>⚠️ Perhatian!</strong></p>
+            <p>Anda akan mengimport backup dengan data:</p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+              <li><strong>${totalLetters}</strong> data register</li>
+              <li>File backup: <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">${file.name}</code></li>
+            </ul>
+            <p><strong style="color: #fbbf24;">Data saat ini (${currentLetters} register) akan diganti dengan data backup ini.</strong></p>
+            <p style="color: #9ca3af; font-size: 12px; margin-top: 15px;">Anda dapat membuat backup data saat ini terlebih dahulu jika diperlukan.</p>
+          </div>
+        `;
+
+        dlgFoot.innerHTML = `
+          <button class="btn primary" id="confirmImport">Ya, Import Sekarang</button>
+          <button class="btn secondary" id="cancelImport">Batal</button>
+        `;
+
+        dlg.showModal();
+
+        // Handle confirmation
+        document.getElementById("confirmImport").addEventListener("click", () => {
+          try {
+            const newState = {
+              counters: backup.counters || {},
+              letters: backup.letters || [],
+            };
+
+            persistState(newState);
+
+            dlg.close();
+            fileInput.value = ""; // Reset input
+
+            // Refresh UI
+            render();
+
+            alert(`✅ Import berhasil!\n\nData yang diimport: ${totalLetters} register\nData lama telah diganti.`);
+          } catch (error) {
+            console.error("Import error:", error);
+            alert(`❌ Gagal saat import: ${error.message}`);
+          }
+        });
+
+        document.getElementById("cancelImport").addEventListener("click", () => {
+          dlg.close();
+          fileInput.value = "";
+        });
+      } catch (error) {
+        console.error("File parsing error:", error);
+        alert(`❌ Gagal membaca file: ${error.message}`);
+        fileInput.value = "";
+      }
+    });
+  }
+});
 
 // UI
 const $ = (q) => document.querySelector(q);
@@ -1019,6 +1137,17 @@ tbody.addEventListener("click", async (e) => {
 
 btnExportPDF.addEventListener("click", exportPDF);
 // Data disimpan saat tombol "Buat Nomor Register" diklik (submit form)
+
+// Backup & Import event listeners
+const btnBackup = document.getElementById("btnBackup");
+const btnImport = document.getElementById("btnImport");
+
+if (btnBackup) {
+  btnBackup.addEventListener("click", exportBackup);
+}
+if (btnImport) {
+  btnImport.addEventListener("click", importBackup);
+}
 
 async function exportExcel() {
   const state = loadState();
