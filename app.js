@@ -2375,7 +2375,7 @@ function buildPrintLetterHtml(letter) {
   const sktmsParentHtml = isSktms ? renderFieldRows(sktmsParentFields) : "";
   const sktmsChildHtml = isSktms ? renderFieldRows(sktmsChildFields) : "";
 
-  const printDate = formatDate(letter.letter_date) || formatDate(new Date().toISOString().slice(0, 10));
+  const printDate = formatDateLong(letter.letter_date) || formatDateLong(new Date().toISOString().slice(0, 10));
   const letterNumber = letter.register_display || "-";
   let closingText = template.closing;
   if (
@@ -2940,6 +2940,14 @@ function formatDate(dateStr) {
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr || "-";
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
+}
+
+function formatDateLong(dateStr) {
+  // Convert YYYY-MM-DD to DD MonthName YYYY for print templates
+  if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr || "-";
+  const [year, month, day] = dateStr.split("-");
+  const monthNames = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  return `${day} ${monthNames[Number(month)]} ${year}`;
 }
 
 // Events
