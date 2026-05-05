@@ -1,0 +1,100 @@
+{
+  "counters": {
+    "BAIK:2026": 3,
+    "SKTMU:2026": 1
+  },
+  "letters": [
+    {
+      "id": "56b74241-a381-4db2-824b-42d03db92316",
+      "classification": "SKTMU",
+      "letter_date": "2026-02-27",
+      "year": 2026,
+      "month": 2,
+      "register_no": 1,
+      "register_display": "100.2.2.5/0001-Kel/II/2026",
+      "fullName": "tes",
+      "birthPlaceDate": "Garut",
+      "occupation": "Guru",
+      "address": "Kp. Gorda",
+      "data": {
+        "fullName": "tes",
+        "birthPlaceDate": "Garut",
+        "occupation": "Guru",
+        "address": "Kp. Gorda",
+        "keterangan": "Keperluan Pemohon"
+      },
+      "status": "AKTIF",
+      "created_at": "2026-02-27T09:02:59.435Z",
+      "updated_at": "2026-02-27T09:02:59.435Z"
+    },
+    {
+      "id": "dc854a3b-a546-4b88-b5a1-7a9e4b623140",
+      "classification": "BAIK",
+      "letter_date": "2026-02-27",
+      "year": 2026,
+      "month": 2,
+      "register_no": 3,
+      "register_display": "100.2.2.5/0003-Kel/II/2026",
+      "fullName": "tes",
+      "birthPlaceDate": "Garut",
+      "occupation": "Guru",
+      "address": "Kp. Gorda",
+      "data": {
+        "fullName": "tes",
+        "birthPlaceDate": "Garut",
+        "occupation": "Guru",
+        "address": "Kp. Gorda",
+        "keterangan": "Keperluan Pemohon"
+      },
+      "status": "AKTIF",
+      "created_at": "2026-02-27T08:56:56.851Z",
+      "updated_at": "2026-02-27T08:56:56.851Z"
+    },
+    {
+      "id": "326f6dbb-c8cc-4228-9580-34afe9d2a27d",
+      "classification": "BAIK",
+      "letter_date": "2026-02-27",
+      "year": 2026,
+      "month": 2,
+      "register_no": 2,
+      "register_display": "100.2.2.5/0002-Kel/II/2026",
+      "fullName": "Tes",
+      "birthPlaceDate": "Garut",
+      "occupation": "Guru",
+      "address": "Kp. Gorda",
+      "data": {
+        "fullName": "Tes",
+        "birthPlaceDate": "Garut",
+        "occupation": "Guru",
+        "address": "Kp. Gorda",
+        "keterangan": "Keperluan Pemohon"
+      },
+      "status": "AKTIF",
+      "created_at": "2026-02-27T08:56:32.142Z",
+      "updated_at": "2026-02-27T08:56:32.142Z"
+    },
+    {
+      "id": "95468868-8ab3-4bcd-94dc-1eeac9cdcc05",
+      "classification": "BAIK",
+      "letter_date": "2026-02-28",
+      "year": 2026,
+      "month": 2,
+      "register_no": 1,
+      "register_display": "100.2.2.5/0001-Kel/II/2026",
+      "fullName": "Tes",
+      "birthPlaceDate": "Garut",
+      "occupation": "Guru",
+      "address": "Kp. Gorda",
+      "data": {
+        "fullName": "Tes",
+        "birthPlaceDate": "Garut",
+        "occupation": "Guru",
+        "address": "Kp. Gorda",
+        "keterangan": "Keperluan Pemohon"
+      },
+      "status": "AKTIF",
+      "created_at": "2026-02-27T08:44:00.153Z",
+      "updated_at": "2026-02-27T08:44:00.153Z"
+    }
+  ]
+}

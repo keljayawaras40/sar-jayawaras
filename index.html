@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sistem Arsip Register Kelurahan Jayawaras</title>
+    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="icons/icon-50.png" alt="" class="navbar-logo img-fluid" />
+        <div>
+          <div class="title">Sistem Arsip Register Kelurahan Jayawaras</div>
+          <div class="subtitle">Pelayanan Administrasi Kelurahan Jayawaras</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div style="display: flex; gap: 8px; align-items: center">
+          <input id="exportYear" type="number" min="2000" max="2100" placeholder="Tahun (mis. 2025)" style="width: 140px; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: rgba(2, 6, 23, 0.35); color: #e5e7eb" />
+          <input id="exportMonth" type="number" min="1" max="12" placeholder="Bulan (1-12)" style="width: 120px; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: rgba(2, 6, 23, 0.35); color: #e5e7eb" />
+          <select id="exportClassification" aria-label="Pilih jenis layanan untuk ekspor" style="width: 220px; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: rgba(2, 6, 23, 0.35); color: #e5e7eb">
+            <option value="">Semua Pelayanan</option>
+          </select>
+        </div>
+        <button id="btnExportExcel" class="btn secondary">Export Rekapan</button>
+        <button id="btnBackup" class="btn secondary">Backup Data</button>
+        <button id="btnImport" class="btn secondary">Import Backup</button>
+        <input id="fileImport" type="file" accept=".json" style="display: none" />
+        <button id="btnReset" class="btn danger">Reset Data</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <div class="cardHead">
+          <h2>Buat Data Register Baru</h2>
+          <!-- <div class="pill" id="storagePill">Menyimpan lokal</div> -->
+        </div>
+
+        <form id="letterForm" class="grid">
+          <div class="field">
+            <label>Register</label>
+            <select id="classification" required>
+              <option value="BAIK">Surat Keterangan Berkelakuan Baik</option>
+              <option value="SKTMU">Surat Keterangan Tidak Mampu Umum</option>
+              <option value="UMUM">Surat Keterangan</option>
+              <option value="PEMAKAMAN">Surat Keterangan Pemakaman</option>
+              <option value="SKBI">Surat Keterangan Beda Identitas</option>
+              <option value="SKBMR">Surat Keterangan Belum Memiliki Rumah</option>
+              <option value="DOMISILI">Surat Keterangan Domisili Dalam Wilayah</option>
+              <option value="DOMISILI_LUAR">Surat Keterangan Domisili Luar Wilayah</option>
+              <option value="DOMISILI_PERUSAHAAN">Surat Keterangan Domisili Perusahaan</option>
+              <option value="SKPED">Surat Keterangan Perubahan Elemen Data</option>
+              <option value="DATANG">Surat Keterangan Datang</option>
+              <option value="PINDAH">Surat Keterangan Pindah</option>
+              <option value="WARIS">Surat Keterangan Ahli Waris</option>
+              <option value="KELAHIRAN">Surat Keterangan Kelahiran</option>
+              <option value="KEMATIAN">Surat Keterangan Kematian</option>
+              <option value="SKBM">Surat Keterangan Belum Menikah</option>
+              <option value="MENIKAH">Surat Keterangan Menikah</option>
+              <option value="SUIS">Surat Keterangan Suami-Istri</option>
+              <option value="SKTMS">Surat Keterangan Tidak Mampu Sekolah</option>
+              <option value="PERTANAHAN">Surat Keterangan Tanah</option>
+              <option value="SKTHT">Surat Keterangan Taksiran Harga Tanah</option>
+              <option value="USAHA">Surat Keterangan Usaha</option>
+              <option value="PENGHASILAN">Surat Keterangan Penghasilan</option>
+              <option value="BANK">Surat Keterangan Bank</option>
+              <option value="WALI">Surat Keterangan Wali</option>
+              <option value="SURAT_MASUK">Surat Masuk</option>
+              <option value="SURAT_KELUAR">Surat Keluar</option>
+            </select>
+            <div class="hint">Nomor urut terpisah untuk setiap pelayanan.</div>
+          </div>
+
+          <div class="field">
+            <label>Tanggal Register</label>
+            <input id="letterDate" type="date" required />
+            <!-- <div class="hint">Tahun diambil dari tanggal pelayanan (reset counter otomatis per tahun).</div> -->
+          </div>
+
+          <div id="dynamicFields"></div>
+
+          <div class="field span2 row">
+            <button class="btn primary" type="submit">Buat Nomor Register</button>
+            <div class="preview">
+              <div class="previewLabel">Preview format:</div>
+              <div class="previewValue" id="previewNo">—</div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Data Register</h2>
+          <div class="filters">
+            <input id="filterYear" type="number" min="2000" max="2100" placeholder="Tahun (mis. 2026)" />
+            <input id="filterMonth" type="number" min="1" max="12" placeholder="Bulan (1-12)" />
+            <input id="filterNo" type="text" placeholder="Cari nomor register…" />
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nomor Register</th>
+                <th>Tanggal</th>
+                <th>Pelayanan</th>
+                <th>Nama Lengkap</th>
+                <th>Tempat, Tanggal Lahir</th>
+                <th>Pekerjaan</th>
+                <th>Alamat</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="footerRow">
+          <div id="stats" class="muted">—</div>
+          <!-- <div class="muted">Tip: Install di Android via Chrome → menu ⋮ → <b>Tambahkan ke layar utama</b>.</div> -->
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Nomor Register Saat Ini</h2>
+          <!-- <div class="muted">Berguna untuk cek “nomor terakhir” per pelayanan per tahun.</div> -->
+        </div>
+        <div id="counterGrid" class="counterGrid"></div>
+      </section>
+    </main>
+
+    <dialog id="dlg">
+      <div class="dlgHead">
+        <div class="dlgTitle" id="dlgTitle">Konfirmasi</div>
+        <button class="iconBtn" id="dlgClose" aria-label="Tutup">✕</button>
+      </div>
+      <div class="dlgBody" id="dlgBody"></div>
+      <div class="dlgFoot" id="dlgFoot"></div>
+    </dialog>
+
+    <!-- Load external libraries first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+
+    <!-- Then load app script with defer to ensure DOM is ready -->
+    <script src="app.js" defer></script>
+    <script>
+      // Register service worker (PWA offline)
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js");
+        });
+      }
+    </script>
+  </body>
+</html>
